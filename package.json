@@ -1,0 +1,74 @@
+{
+  "name": "electron",
+  "version": "0.0.1",
+  "main": "./dist/main.js",
+  "description": "Electron app",
+  "author": {
+    "name": "electron",
+    "email": "electron@github.com"
+  },
+  "homepage": "https://electron.atom.io",
+  "scripts": {
+    "start": "./node_modules/.bin/cross-env NODE_ENV=develop node ./conf/bootstrap.js",
+    "build": "rm -rf assets && npm run build:main && npm run build:renderer && ./node_modules/.bin/build -wm --x64 --ia32 && rm -fr dist",
+    "build:main": "./node_modules/.bin/cross-env NODE_ENV=production ./node_modules/.bin/webpack --config ./conf/webpack.main.conf.js --progress --hide-modules",
+    "build:renderer": "./node_modules/.bin/cross-env NODE_ENV=production ./node_modules/.bin/webpack --config ./conf/webpack.renderer.conf.js --progress --hide-modules",
+    "tag": "node .tag",
+    "tag:delete": "git tag -d $1 && git push origin --delete tag $1"
+  },
+  "build": {
+    "appId": "org.electron.app",
+    "productName": "Electron",
+    "files": [
+      "dist/**/*"
+    ],
+    "directories": {
+      "output": "assets"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "res/icons/icon.icns"
+    },
+    "win": {
+      "icon": "res/icons/icon.ico"
+    }
+  },
+  "devDependencies": {
+    "vue": "2.4.2",
+    "vuex": "2.3.1",
+    "vue-router": "2.7.0",
+    "babel-core": "6.25.0",
+    "babel-helper-vue-jsx-merge-props": "2.0.2",
+    "babel-loader": "7.1.1",
+    "babel-plugin-syntax-jsx": "6.18.0",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "babel-plugin-transform-vue-jsx": "3.4.3",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "babel-runtime": "6.23.0",
+    "chalk": "2.0.1",
+    "cross-env": "5.0.1",
+    "css-loader": "0.28.4",
+    "dateformat": "^2.0.0",
+    "electron": "1.6.11",
+    "electron-builder": "19.18.1",
+    "electron-devtools-installer": "^2.2.0",
+    "extract-text-webpack-plugin": "2.1.2",
+    "file-loader": "0.11.2",
+    "html-webpack-plugin": "2.29.0",
+    "koa": "1.1.0",
+    "koa-webpack-dev-middleware": "1.4.6",
+    "koa-webpack-hot-middleware": "1.0.3",
+    "node-loader": "0.6.0",
+    "style-loader": "0.18.2",
+    "url-loader": "0.5.9",
+    "vue-hot-reload-api": "2.1.0",
+    "vue-html-loader": "1.2.4",
+    "vue-loader": "12.2.2",
+    "vue-style-loader": "3.0.1",
+    "vue-template-compiler": "2.4.2",
+    "webpack": "2.6.1",
+    "webpack-hot-middleware": "2.18.0",
+    "webpack-merge": "4.1.0"
+  }
+}

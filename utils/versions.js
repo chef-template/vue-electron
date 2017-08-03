@@ -1,0 +1,1 @@
+console.log(`${process.versions.node},${process.versions.chrome},${process.versions.electron}`)
