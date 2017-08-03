@@ -1,6 +1,6 @@
 {
   "name": "electron",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "./dist/main.js",
   "description": "Electron app",
   "author": {
