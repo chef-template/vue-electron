@@ -7,7 +7,7 @@ const logger = require('../utils/logger')
 const { resolve, join } = require('path')
 const { spawn } = require('child_process')
 const webpackHotMiddleware = require('webpack-hot-middleware')
-const webpackHotMiddleware = require('koa-webpack-hot-middleware')
+const webpackDevMiddleware = require('koa-webpack-dev-middleware')
 
 const WEBPACK_MAIN_CONFIG = resolve(process.cwd(), './conf/webpack.main.conf')
 const WEBPACK_RENDERER_CONFIG = resolve(process.cwd(), './conf/webpack.renderer.conf')
