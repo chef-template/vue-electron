@@ -1,6 +1,6 @@
 {
   "name": "electron",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "./dist/main.js",
   "description": "Electron app",
   "author": {
@@ -36,6 +36,10 @@
     "win": {
       "icon": "res/icons/icon.ico"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/electron/electron.git"
   },
   "devDependencies": {
     "vue": "2.4.2",
