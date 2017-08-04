@@ -1,6 +1,6 @@
 {
   "name": "electron",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "./dist/main.js",
   "description": "Electron app",
   "author": {
@@ -11,6 +11,7 @@
   "scripts": {
     "start": "./node_modules/.bin/cross-env NODE_ENV=develop node ./conf/bootstrap.js",
     "build": "rm -rf assets && npm run build:main && npm run build:renderer && ./node_modules/.bin/build -wm --x64 --ia32 && rm -fr dist",
+    "release": "rm -rf assets && npm run build:main && npm run build:renderer && ./node_modules/.bin/build -wm -p always --x64 --ia32 && rm -fr dist",
     "build:main": "./node_modules/.bin/cross-env NODE_ENV=production ./node_modules/.bin/webpack --config ./conf/webpack.main.conf.js --progress --hide-modules",
     "build:renderer": "./node_modules/.bin/cross-env NODE_ENV=production ./node_modules/.bin/webpack --config ./conf/webpack.renderer.conf.js --progress --hide-modules",
     "tag": "node .tag",
@@ -26,7 +27,10 @@
       "output": "assets"
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "icon": "res/icons/icon.icns"
     },
     "win": {
@@ -58,7 +62,6 @@
     "html-webpack-plugin": "2.29.0",
     "koa": "1.1.0",
     "koa-webpack-dev-middleware": "1.4.6",
-    "koa-webpack-hot-middleware": "1.0.3",
     "node-loader": "0.6.0",
     "style-loader": "0.18.2",
     "url-loader": "0.5.9",

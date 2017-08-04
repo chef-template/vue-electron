@@ -75,6 +75,8 @@ let config = {
 }
 
 if (isDev) {
+    config.entry.main.unshift(resolve(process.cwd(), './utils/dev-client.js'))
+    
     config = merge(config, {
         plugins: [
             new webpack.DefinePlugin({

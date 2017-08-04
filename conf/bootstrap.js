@@ -6,7 +6,7 @@ const { url } = require('./constants')
 const logger = require('../utils/logger')
 const { resolve, join } = require('path')
 const { spawn } = require('child_process')
-const webpackDevMiddleware = require('koa-webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
 const webpackHotMiddleware = require('koa-webpack-hot-middleware')
 
 const WEBPACK_MAIN_CONFIG = resolve(process.cwd(), './conf/webpack.main.conf')
@@ -15,7 +15,7 @@ const WEBPACK_RENDERER_CONFIG = resolve(process.cwd(), './conf/webpack.renderer.
 let restart, mainProcess
 
 function startRenderer() {
-    let port, config, compiler
+    let port, config, compiler, hotMiddleware
 
     port = parse(url).port || 80
     config = require(WEBPACK_RENDERER_CONFIG)
@@ -27,8 +27,17 @@ function startRenderer() {
     config.entry.main.unshift('webpack-hot-middleware/client?reload=true')
 
     compiler = webpack(config)
+    hotMiddleware = koaWebpackHotMiddleware(compiler, { log: rendererLogger })
+
+    compiler.plugin('compilation', (compilation) => {
+        compilation.plugin('html-webpack-plugin-after-emit', (data, done) => {
+            hotMiddleware.publish({ action: 'reload' })
+            done()
+        })
+    })
+
     app.use(webpackDevMiddleware(compiler, config.devServer))
-    app.use(webpackHotMiddleware(compiler, { log: rendererLogger }))
+    app.use(hotMiddleware)
     app.use(function* (next) {
         this.body = yield readFile(compiler, 'index.html')
     })
@@ -127,6 +136,34 @@ function* readFile(compiler, fileName) {
             resolve(result)
         })
     })
+}
+
+function koaWebpackHotMiddleware(compiler, option) {
+    let hotMiddleware, middleware
+    
+    hotMiddleware = webpackHotMiddleware(compiler, option)
+    middleware = function* (next) {
+        let nextStep = yield (function(action, req, res, end) {
+            return function(done) {
+                res.end = function() {
+                    end.apply(this, arguments)
+                    done(null, 0)
+                }
+
+                action(req, res, function() {
+                    done(null, 1)
+                })
+            }
+        })(hotMiddleware, this.req, this.res, this.res.end)
+
+        if(nextStep && next) {
+            yield* next
+        }
+    }
+
+    middleware.publish = hotMiddleware.publish
+
+    return middleware
 }
 
 function getVersions() {
